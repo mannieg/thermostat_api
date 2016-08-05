@@ -19,9 +19,11 @@ class Thermostat < Sinatra::Base
 
   post '/thermostat' do
     return_message = {}
-    user = UserInfo.create(ip_address: request.ip, city: params[:city],
-                     temperature: params[:temperature])
-    if(user.save)
+    user = UserInfo.first_or_create(:ip_address => request.ip).update(
+                     city: params[:city],
+                     temperature: params[:temperature],
+                     power_saving: params[:psm])
+    if(user)
       return_message[:status] = 'OK'
     else
       return_message[:status] = 'Error'
